@@ -12,23 +12,27 @@ import java.util.Random;
 
 @RestController
 public class StoredIntController {
-    private final Path FILE_PATH = Paths.get("data","stored-int.txt");
+    private final Path FILE_PATH = Paths.get(System.getProperty("java.io.tmpdir"), "stored-int.txt");
 
     @GetMapping("/stored-int")
     public ResponseEntity<Integer> getStoredInt() {
-        try{
+        try {
             Files.createDirectories(FILE_PATH.getParent());
 
-            if(Files.exists(FILE_PATH)){
-                String content = Files.readString(FILE_PATH);
-                int storedInt = Integer.parseInt(content);
-                return ResponseEntity.ok(storedInt);
-            }else{
-                int randomNumber = new Random().nextInt(1000000);
-
-                Files.writeString(FILE_PATH, String.valueOf(randomNumber));
-                return ResponseEntity.ok(randomNumber);
+            if (Files.exists(FILE_PATH)) {
+                String content = Files.readString(FILE_PATH).trim();
+                try {
+                    int storedInt = Integer.parseInt(content);
+                    return ResponseEntity.ok(storedInt);
+                } catch (NumberFormatException e) {
+                    Files.delete(FILE_PATH);
+                }
             }
+
+            int randomNumber = new Random().nextInt(1_000_000);
+            Files.writeString(FILE_PATH, String.valueOf(randomNumber));
+            return ResponseEntity.ok(randomNumber);
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
