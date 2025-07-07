@@ -1,11 +1,9 @@
 package com.example.demo.endpoint.rest.controller.health;
 
-import org.apache.commons.io.FileUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,8 +11,8 @@ import java.nio.file.Paths;
 import java.util.Random;
 
 @RestController
-public class StoredIntCOntroller {
-    private final Path FILE_PATH = Paths.get("src","data","stored-int.txt");
+public class StoredIntController {
+    private final Path FILE_PATH = Paths.get("data","stored-int.txt");
 
     @GetMapping("/stored-int")
     public ResponseEntity<Integer> getStoredInt() {
